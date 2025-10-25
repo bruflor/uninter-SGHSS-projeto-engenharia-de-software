@@ -1,10 +1,10 @@
-@startuml 
+@startuml Fluxo_Atendimento_Geral_RF006_RF007
 
 header
 Requisitos: RF006 (Teleconsulta) e RF007 (Criação de Prontuário)
 end header
 
-title Fluxo de Atendimento Digital (Teleconsulta + Prontuário)
+title Fluxo de Atendimento (Presencial e Teleconsulta) e Prontuário
 
 caption
 Desenvolvido por
@@ -13,44 +13,54 @@ end caption
 
 !theme mars
 
-|user| Paciente
-|#efefef|prof| Profissional de saúde
+|patient| Paciente
+|prof| Profissional de Saúde
 |sys| Sistema
-
-
 
 |prof|
 start
 :Acessa agenda e consulta agendada;
-:Inicia Teleconsulta;
 
-|user|
-:Acessa sistema;
-:Visualiza notificação de consulta iminente;
+if (Tipo de consulta?) then (Teleconsulta)
+  :Inicia/Prepara ambiente de Teleconsulta;
 
-:Solicita para entrar na sala de Teleconsulta;
+  |patient|
+  :Acessa sistema;
+  :Visualiza notificação de consulta iminente;
+  :Solicita para entrar na sala;
+
+  |sys|
+  :Envia notificação de entrada pendente;
+
+  |prof|
+  :Aceita entrada de paciente na teleconsulta;
+
+  |sys|
+  :Verifica microfone/câmera e estabelece conexão segura;
+
+else (Presencial)
+  :Confirma chegada do paciente;
+
+  |sys|
+  :Atualiza status do paciente no painel de atendimento;
+end if
+
 |sys|
-:Envia notificação de entrada pendente;
-
-|prof|
-:Aceita entrada de paciente na teleconsulta;
-
-|sys|
-:Verifica microfone/câmera e estabelece conexão segura;
 :Altera status da consulta para **"Em Andamento"**;
-|user|
-:Entra na Teleconsulta;
+
 |prof|
-:Realização da Teleconsulta;
+:Realização do atendimento (Presencial ou Teleconsulta);
 
 note
 Ação conjunta, mas liderada pelo profissional;
 end note
 
-:Clica em "Encerrar Consulta";
+:Clica em "Encerrar Atendimento";
 
 |sys|
-:Encerra conexão de vídeo para ambos;
+if (É Teleconsulta?) then (Sim)
+  :Encerra conexão de vídeo para ambos;
+end if
 :Altera status para **"Finalizada/Aguardando Prontuário"**;
 
 
@@ -61,21 +71,20 @@ end note
 :Clica em "Finalizar/Salvar Prontuário";
 
 |sys|
-:Valida dados do Prontuário;
+:Valida dados do prontuário;
 :Registra prontuário no histórico da consulta;
-:Registra log de Auditoria;
+:Registra log de auditoria;
 :Altera status da consulta para **"Concluído"**;
 
 |prof|
 if (Necessidade de atualização posterior?) then (Sim)
-  |prof|
   :Acessa Prontuário;
-  :Adiciona Adendo/Nota de atualização;
+  :Adiciona nota de atualização;
 
   |sys|
   :Anexa nota ao histórico, mantendo o original intacto;
   :Registra a edição no log de auditoria;
-endif
+end if
 
 stop
 @enduml
