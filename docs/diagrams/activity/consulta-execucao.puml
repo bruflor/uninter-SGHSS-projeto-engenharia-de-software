@@ -1,0 +1,81 @@
+@startuml 
+
+header
+Requisitos: RF006 (Teleconsulta) e RF007 (Criação de Prontuário)
+end header
+
+title Fluxo de Atendimento Digital (Teleconsulta + Prontuário)
+
+caption
+Desenvolvido por
+Bruna Flôr - RU: 4596056
+end caption
+
+!theme mars
+
+|user| Paciente
+|#efefef|prof| Profissional de saúde
+|sys| Sistema
+
+
+
+|prof|
+start
+:Acessa agenda e consulta agendada;
+:Inicia Teleconsulta;
+
+|user|
+:Acessa sistema;
+:Visualiza notificação de consulta iminente;
+
+:Solicita para entrar na sala de Teleconsulta;
+|sys|
+:Envia notificação de entrada pendente;
+
+|prof|
+:Aceita entrada de paciente na teleconsulta;
+
+|sys|
+:Verifica microfone/câmera e estabelece conexão segura;
+:Altera status da consulta para **"Em Andamento"**;
+|user|
+:Entra na Teleconsulta;
+|prof|
+:Realização da Teleconsulta;
+
+note
+Ação conjunta, mas liderada pelo profissional;
+end note
+
+:Clica em "Encerrar Consulta";
+
+|sys|
+:Encerra conexão de vídeo para ambos;
+:Altera status para **"Finalizada/Aguardando Prontuário"**;
+
+
+|prof|
+:Redirecionado para tela de **Prontuário**;
+:Preenche campos obrigatórios (Diagnóstico, Conduta, requisição de exames, etc.);
+:Anexa documentos (se necessário);
+:Clica em "Finalizar/Salvar Prontuário";
+
+|sys|
+:Valida dados do Prontuário;
+:Registra prontuário no histórico da consulta;
+:Registra log de Auditoria;
+:Altera status da consulta para **"Concluído"**;
+
+|prof|
+if (Necessidade de atualização posterior?) then (Sim)
+  |prof|
+  :Acessa Prontuário;
+  :Adiciona Adendo/Nota de atualização;
+
+  |sys|
+  :Anexa nota ao histórico, mantendo o original intacto;
+  :Registra a edição no log de auditoria;
+endif
+
+stop
+@enduml
