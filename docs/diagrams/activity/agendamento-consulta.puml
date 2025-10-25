@@ -8,7 +8,7 @@ version: 1.0.0
 ---
 
 header
-Requisitos: RF002 (Agendamento de consultas) e RF009 (Gerenciamento de agendas)
+Requisitos: RF002 (Agendamento de consultas) e RF004 (Visualização histórico)
 end header
 
 title Fluxo de Agendamento de Consultas
@@ -28,19 +28,38 @@ start
 |user|
 : Acessa sistema;
 : Acessa módulo de consulta;
-: Filtra por profissional/especialidade;
 
 |sys|
-: Verifica agenda disponível;
+: Apresenta opções;
 
 |user|
-: Escolhe data/horário;
-: Confirma agendamento;
+if (Opção desejada?) then (Histórico de consultas)
+  if (Tipo de histórico?) then (Consultas finalizadas)
+    : Seleciona consulta;
+    : Visualiza detalhes (consula e prontuário);
+  else (Consultas pendentes)
+    : Seleciona consulta;
+    : Solicita cancelamento;
+    : Digita motivo do cancelamento;
+    : Submete pedido;
+    |sys|
+    : Processa cancelamento;
+    : Libera horário na agenda;
+  endif
+else (Nova consulta)
+  : Filtra por profissional/especialidade;
+  |sys|
+  : Verifica agenda disponível;
+  |user|
+  : Escolhe data/horário;
+  : Confirma agendamento;
+  |sys|
+  : Bloqueia horário na agenda;
+endif
 
 |sys|
-: Bloqueia horário na agenda;
-: Registra agendamento;
-: Envia notificação para o profissional e o paciente envolvidos;
+: Registra pedido;
+: Envia notificação para o profissional\ne o paciente envolvidos;
 
 |user|
 : Recebe confirmação;
