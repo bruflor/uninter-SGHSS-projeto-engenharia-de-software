@@ -4,6 +4,11 @@ header
 Requisitos Relacionados: RF005
 end header
 
+caption
+Desenvolvido por
+Bruna Flôr - RU: 4596056
+end caption
+
 title Caso de Uso: UC-080 - Gerenciar Resultados de Exames
 
 left to right direction

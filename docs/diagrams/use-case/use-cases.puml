@@ -2,6 +2,12 @@
 
 title Diagrama de Casos de Uso Global - Visão Final Agrupada
 
+caption
+Desenvolvido por
+Bruna Flôr - RU: 4596056
+end caption
+
+
 left to right direction
 skinparam packageStyle rectangle
 skinparam actorStyle awesome

@@ -4,6 +4,11 @@ header
 Requisitos Relacionados: RF004, RF007, RF008
 end header
 
+caption
+Desenvolvido por
+Bruna Flôr - RU: 4596056
+end caption
+
 title Caso de Uso: UC-050 - Gerenciar Prontuário Eletrônico (PEP)
 
 left to right direction

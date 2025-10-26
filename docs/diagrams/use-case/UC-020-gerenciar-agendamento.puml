@@ -4,6 +4,11 @@ header
 Requisitos Relacionados: RF002, RF003, RF009
 end header
 
+caption
+Desenvolvido por
+Bruna Flôr - RU: 4596056
+end caption
+
 title Caso de Uso: UC-020 - Gerenciar Agendamento
 
 left to right direction

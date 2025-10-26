@@ -5,6 +5,11 @@ Caso de Uso: UC-040 - Realizar Atendimento/Teleconsulta
 Requisitos Relacionados: RF006
 end header
 
+caption
+Desenvolvido por
+Bruna Flôr - RU: 4596056
+end caption
+
 title UC-040 - Realizar Atendimento/Teleconsulta (Baseado no Fluxo de Atividades)
 
 left to right direction
