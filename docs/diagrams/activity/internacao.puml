@@ -1,4 +1,4 @@
-@startuml Fluxo_Gestao_Leitos_RF010_Corrigido_Disponibilidade
+@startuml
 
 header
 Requisitos: RF010 - Gestão de Internações
