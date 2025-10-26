@@ -1,0 +1,123 @@
+@startuml Diagrama_Classes_Sistema_Saude_FINAL_RBAC
+
+title Diagrama de Classes Conceitual FINAL - Com Controle de Acesso (RBAC)
+
+hide methods
+skinparam classAttributeIconSize 0
+
+' 1. CLASSES DE SEGURANÇA (RBAC)
+
+package "Seguranca e Acesso" {
+    class Usuario {
+      + login: String {unique}
+      + senhaHash: String
+      + ultimoAcesso: DateTime
+    }
+
+    class Role {
+      + nome: String {unique} (Ex: Medico, Admin, Lab)
+    }
+
+    class Permissao {
+      + nome: String {unique} (Ex: p_criar_prontuario, p_gerenciar_leitos)
+    }
+    
+    ' Tabelas de Junção
+    class UsuarioRole
+    class RolePermissao
+    
+    ' Relações de N para N
+    Usuario "1..*" -- "1..*" UsuarioRole
+    UsuarioRole "0..*" -- "1" Role
+    
+    Role "1" -- "0..*" RolePermissao
+    RolePermissao "1..*" -- "1" Permissao
+}
+
+' 2. CLASSES DE PERFIS E DADOS PESSOAIS
+
+abstract class Perfil {
+  + CPF: String {unique}
+  + nomeCompleto: String
+  + telefone: String
+  + email: String
+  ...
+}
+
+class PerfilPaciente {
+  + tipoSanguineo: String
+}
+
+class PerfilProfissional {
+  + registro: String {unique}
+  + especialidade: String
+}
+
+class PerfilAdministrativo {
+  + cargo: String
+}
+
+' Hierarquia e Conexão com Segurança
+Perfil <|-- PerfilPaciente
+Perfil <|-- PerfilProfissional
+Perfil <|-- PerfilAdministrativo
+
+' A Conta de Acesso (Login) pertence a um Perfil específico
+Usuario "1" -- "1" Perfil : <possui dados pessoais>
+
+
+' 3. MÓDULO DE ATENDIMENTO E GESTÃO
+
+class UnidadeDeAtendimento {
+  + nome: String
+  + tipo: Enum
+}
+
+class Atendimento {
+  + dataHora: DateTime
+  + tipo: Enum (Consulta, Exame)
+  + status: Enum
+}
+
+class Agenda {
+  + data: Date
+  + horaInicio: Time
+}
+
+class Prontuario {
+  + dataCriacao: DateTime
+}
+
+class DocumentoDigital {
+  + tipo: ENUM
+  + dataCriacao: DateTime
+}
+
+class Leito {
+  + numero: String
+}
+
+' RELACIONAMENTOS CHAVE (Funcionais)
+
+' Evento de Atendimento
+PerfilPaciente "1" -- "0..*" Atendimento : é marcado por >
+PerfilProfissional "1" -- "0..*" Atendimento : é responsável por >
+
+' Organização
+UnidadeDeAtendimento "1" -- "0..*" PerfilProfissional : emprega >
+UnidadeDeAtendimento "1" -- "0..*" Atendimento : acontece em >
+UnidadeDeAtendimento "1" -- "1..*" Leito : possui >
+
+' Agenda
+PerfilProfissional "1" -- "1..*" Agenda : gerencia >
+Atendimento "1" -- "1" Agenda : ocupa slot em >
+
+' Prontuário e Documentação
+PerfilPaciente "1" -- "1" Prontuario : possui >
+Atendimento "1" -- "0..1" Prontuario : gera >
+Prontuario "1" -- "0..*" DocumentoDigital : possui >
+
+' Internação
+PerfilPaciente "1" -- "0..*" Leito : ocupa [0..1] >
+
+@enduml
